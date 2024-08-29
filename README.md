@@ -11,15 +11,50 @@ __投資理財顧問__
    當用戶輸入一個問題或指令後，模型通過理解該文本中的關鍵信息，然後在它的知識範圍內生成一個連貫且相關的回應。是一個利用深度學習中
    藉由Transformer的架構訓練出來的模型，也就是會根據上下文來決定每個單詞的重要性，從而更好地捕捉上下文關係。
 
+   展示使用方式：
+```python
+res = client.completions.create(              # AI會依據我的訊息給我回應
+    model="gpt-3.5-turbo-instruct",
+    prompt="介紹幾個圖像處理深度學習的layer模型給我",                # 傳訊息給AI
+    max_tokens=300,                    # 設定AI輸出最大值
+    stop="",                       # 設定遇到特定值就停止回應
+    n=3,                         # 設定n個回應
+    echo=True,                      # 設定是否要覆誦我的訊息，預設為false, 不會包含在tokan裡面
+    temperature=1,                   # 設定AI的回應的創意度(0-2)，預設為1，數字越小越古板，數字越大越有創意
+    top_p=1,                      # 設定AI的回應的創意度(0-1)，預設為1，數字越小越古板，數字越大越有創意
+    frequency_penalty=0,                # (懲罰會累積)避免或增加使用重複的字(-2-2)，預設為0，>0懲罰，會減少重複;<0鼓勵，會增加重複
+    presence_penalty=0,                 # (只會懲罰一次)避免或增加使用重複的字(-2-2)，預設為0，>0懲罰，會減少重複;<0鼓勵，會增加重複
+    stream=False                     # 是否流式(一個步驟一個步驟)輸出，把過程顯示出來，要搭配for loop
+)
+```
+
 (2) whisper-1:
 
    主要用於將音訊檔案中的語音轉換為文字。這項功能廣泛應用於語音轉錄、自動字幕生成等場景。一樣是由Transformer的架構訓練出來的模型。
 
+      展示使用方式：
+```python
+audio_file = open("音檔檔名", "rb")               # 開啟並讀取語音檔案
+res = client.audio.transcriptions.create(               # 做語音辨識並且轉換成文字，輸出輸入的語言相同
+    model="whisper-1",
+    file=audio_file,
+    prompt="提示"                         # 提示，可以提升模型輸出的準確度，提示的語言必須和語音的語言相同
+)
+```
+
 (3) text-embedding-ada-002: 
 
    將文字數據轉換為數值向量，這些向量可以用於多種自然語言處理任務。一樣是由Transformer的架構訓練出來的模型。
+
+   展示使用方式：
+```python
+res = client.embeddings.create(
+      model="text-embedding-ada-002",
+      input=text                         # 輸入欲轉換文字
+  )
+```
 ### 2.架構：
-Step1: request夯鼠兄弟YouTube撥放清單網址
+Step1: request柴鼠兄弟YouTube撥放清單網址
 Step2: 將撥放清單中所有影片的音訊以及標題透過whisper-1轉換為文字並儲存下來
 Step3:
 ### 3.Code
@@ -148,13 +183,63 @@ def indices_of_nearest_neighbors_from_distances(distances) -> np.ndarray:
     # 使用 numpy 的 argsort 函式，將距離從小到大排序，並返回對應的索引
     return np.argsort(distances)
 ```
+接著，就可以搭建一個投資理財的顧問了
+```python
+def finance_consult(question):
+    # 獲取投資理財問題的文字並且轉換為向量
+    question_embeddings = get_embedding(question)
 
+    # 計算並儲存問題的向量與所有資料庫的向量的距離
+    dist = distances_from_embeddings(question_embeddings, df["embeddings"])
 
+    # 找到最近鄰的索引
+    nearest_idx = indices_of_nearest_neighbors_from_distances(dist)
 
+    # 初始化變量來儲存最近的文本片段
+    nearest_text = ""
+    
+    # 從最近鄰中提取前兩個最接近的文本片段，並將它們合併到一個字符串中
+    for i in range(2):
+        nearest_text += df["split_text_list"][nearest_idx[i]] + '\n'
 
+    # 構建要發送給 GPT-3.5-turbo-instruct 的提示語，包含問題和最接近的文本片段
+    prompt = f"""
+    你是我的投資理財顧問，請根據以下內容回答此問題:{question}
+    如果沒有100%確定，就回答'我不知道'
 
+    ###
+    內容:
+    {nearest_text}
+    ###
 
+    """
+    
+    # 使用 OpenAI API 來獲取 GPT-3.5-turbo-instruct 的回應
+    res = client.completions.create(
+        model="gpt-3.5-turbo-instruct",
+        prompt=prompt,
+        max_tokens=500,
+        temperature=0
+    )
 
+    # 返回 GPT 模型生成的文本回應
+    return res.choices[0].text
+```
+最後，透過gradio快速建立一個互動介面，將模型變成網頁應用
+```python
+import gradio as gr
+
+demo = gr.Interface(
+    fn=finance_consult,
+    inputs="text",
+    outputs="text",
+    title="投資理財顧問",
+    description="輸入您的問題:",
+    allow_flagging="never"
+)
+
+demo.launch(debug=True)
+```
 
 ## 使用資料：
 YouTuber夯鼠兄弟的YouTube撥放清單影片
