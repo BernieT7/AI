@@ -53,9 +53,15 @@ res = client.embeddings.create(
 ```
 補充：Deep learning的Transformer架構，可參考台大李宏毅教授的深度學習課程(https://hackmd.io/@abliu/BkXmzDBmr)。
 ### 2.架構：
-Step1: request柴鼠兄弟YouTube撥放清單網址
-Step2: 將撥放清單中所有影片的音訊以及標題透過whisper-1轉換為文字並儲存下來
-Step3:
+Step1: request柴鼠兄弟YouTube撥放清單網址。
+
+Step2: 將撥放清單中所有影片的音訊以及標題透過whisper-1轉換為文字並儲存下來。
+
+Step3: 透過text-embedding-ada-002將這些文字轉換為向量並且儲存為此投資理財顧問的資料庫。
+
+Step4: 搭建投資理財顧問，將輸入的文字轉換為向量後，計算該向量與資料庫中所有的向量的距離並找出最近的那一個。
+
+Step5: 利用此最近的向量作為gpt-3.5-turbo-instruct回答輸入問題的基礎，並回傳模型判斷最適合的答案。
 ### 3.Code
 引入OpenAPI套件以及.evn套件
 
@@ -239,9 +245,18 @@ demo = gr.Interface(
 
 demo.launch(debug=True)
 ```
+### Test our consultant's capability
+
 ## Pros & Cons
 優點：
-   1. 使用OpenAI API建構聊天機器人，可以省略
-   2.
+   1. 使用OpenAI API建構聊天機器人，無需自行開發或訓練模型，就能使用許多相當優秀的模型，這大大縮短了開發時間
+   2. 和成本。
+   3. 支持多種語言，能夠滿足全球市場的需求，適合開發國際化應用。
+   4. 可以通過設置不同的參數（如溫度、最大生成長度等）來調整聊天機器人的行為，從而定制其回應風格和語氣。
+缺點：
+   1. 使用OpenAI API是需要錢的，不同的模型也有不同計費方式，因此，隨著使用量的增加，API 請求的成本可能會變得
+      很高，特別是對於大型或高頻率使用的應用，這可能會導致運營成本增加。
+   2. 使用 OpenAI API 意味著對第三方服務的依賴，如果 OpenAI API 出現故障或變更，可能會影響到應用的正常運行。
+   3. GPT 模型對於一般知識和常識性問題表現優秀，但對於非常專業或技術性的問題，它的回應可能不如專業模型那麼精確。
 ## 使用資料：
 YouTuber夯鼠兄弟的YouTube撥放清單影片
