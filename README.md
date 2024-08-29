@@ -51,7 +51,7 @@ def get_video_title_text(video_url, audio_name):
   return video.title, text                   # 回傳影片標題及文字
 ```
 利用前兩個函式，定義一個回傳所有撥放清單中的所有影片標題及內容文字的函式
-ˋˋˋ
+'''python
 def get_playlist_info(playlist_url):
   playlist = Playlist(playlist_url)                  # 取得playlist裡所有影片的網址
   videos_info = {}
@@ -59,7 +59,7 @@ def get_playlist_info(playlist_url):
     title, text = get_video_title_text(video_url, f"{idx}.mp3")  # 取得所有影片標題及文字
     videos_info[title] = text                    # 存放所有影片標題及文字
   return videos_info                          # 回傳所有影片標題及文字
-ˋˋˋ
+'''
 
 ## 使用資料：
 YouTuber夯鼠兄弟的YouTube撥放清單影片
