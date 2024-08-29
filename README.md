@@ -18,11 +18,13 @@ __投資理財顧問__
 ### 2.架構：
 引入OpenAPI套件以及.evn套件
 .evn套件用於保存OpenAI的API Key，將其寫入自己電腦中的.env文檔中儲存，可以避免被其他人使用
-\`\`\`python
-   from openai import OpenAI
-   from dotenv import dotenv_values
-   config = dotenv_values('.env')
-   client = OpenAI(api_key=config["API_KEY"])
-\`\`\`
+
+```python
+from openai import OpenAI
+from dotenv import dotenv_values
+config = dotenv_values('.env')
+client = OpenAI(api_key=config["API_KEY"])
+```
+
 ## 使用資料：
 YouTuber夯鼠兄弟的YouTube撥放清單影片
