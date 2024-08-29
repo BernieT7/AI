@@ -160,11 +160,11 @@ from typing import List  # 引入 List 類型，用於標示列表中元素的�
 from scipy import spatial  # 引入 scipy 的 spatial 模組，其中包含空間距離計算的工具
 
 def distances_from_embeddings(
-    query_embedding: List[float],  # 查詢嵌入向量，表示為一個浮點數列表
-    embeddings: List[List[float]],  # 多個嵌入向量的列表，每個嵌入向量也是一個浮點數列表
+    query_embedding: List[float],  # 輸入向量向量，表示為一個浮點數列表
+    embeddings: List[List[float]],  # 資料庫向量的列表，每個嵌入向量也是一個浮點數列表
     distance_metric="cosine",  # 距離度量方法，預設為 "cosine"（餘弦距離）
-) -> List[List]:  # 函式返回一個二維列表，儲存每個嵌入向量與查詢嵌入向量之間的距離
-    """返回查詢嵌入與嵌入列表之間的距離。"""
+) -> List[List]:  # 函式返回一個二維列表，儲存輸入向量與每個資料庫向量之間的距離
+    """返回輸入向量與每個資料庫向量之間的距離。"""
 
     # 定義一個字典，將不同的距離度量方法名稱與對應的距離計算函式進行映射
     distance_metrics = {
@@ -174,7 +174,7 @@ def distances_from_embeddings(
         "Linf": spatial.distance.chebyshev,  # L∞ 距離（切比雪夫距離），即各坐標軸上距離的最大值
     }
 
-    # 使用列表生成式，計算查詢嵌入向量與每個嵌入向量之間的距離，並將距離存入列表
+    # 使用列表生成式，計算查詢輸入向量與每個資料庫向量之間的距離，並將距離存入列表
     distances = [
         distance_metrics[distance_metric](query_embedding, embedding)
         for embedding in embeddings
