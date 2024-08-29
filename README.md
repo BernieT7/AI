@@ -17,6 +17,7 @@ __投資理財顧問__
    將文字數據轉換為數值向量，這些向量可以用於多種自然語言處理任務。一樣是由Transformer的架構訓練出來的模型。
 ### 2.架構：
 引入OpenAPI套件以及.evn套件
+
 .evn套件用於保存OpenAI的API Key，將其寫入自己電腦中的.env文檔中儲存，可以避免被其他人使用
 
 ```python
@@ -25,6 +26,31 @@ from dotenv import dotenv_values
 config = dotenv_values('.env')
 client = OpenAI(api_key=config["API_KEY"])
 ```
+
+引入pytubefix中的YouTube, Playlist，定義一個將影片音訊轉換為文檔的function
+
+```python
+from pytubefix import YouTube, Playlist
+def get_audio_text(audio_path, title):
+  audio = open(audio_path, "rb")               # 讀取音檔
+  res = client.audio.transcriptions.create(          # 利用whisper-1將音檔轉換為文字
+      model="whisper-1",
+      file=audio,
+      prompt=title                      # 以影片標題引導模型的指示
+  )
+  return res.text                        # 回傳影片音檔文字
+```
+定義一個回傳影片標題及文字的function
+```python
+def get_video_title_text(video_url, audio_name):
+  video = YouTube(video_url)                  # 創建YT影片
+  stream = video.streams.filter(only_audio=True).first()    # 取得YT影片音檔
+  audio_path = stream.download(filename=audio_name)       # 將音檔下載至本地端
+  text = get_audio_text(audio_path, video.title)        # 取得文字
+  return video.title, text                   # 回傳影片標題及文字
+```
+
+
 
 ## 使用資料：
 YouTuber夯鼠兄弟的YouTube撥放清單影片
