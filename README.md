@@ -15,7 +15,7 @@ __投資理財顧問__
 ```python
 res = client.completions.create(              # AI會依據我的訊息給我回應
     model="gpt-3.5-turbo-instruct",
-    prompt="介紹幾個圖像處理深度學習的layer模型給我",                # 傳訊息給AI
+    prompt="訊息",                      # 傳訊息給AI
     max_tokens=300,                    # 設定AI輸出最大值
     stop="",                       # 設定遇到特定值就停止回應
     n=3,                         # 設定n個回應
