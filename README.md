@@ -3,9 +3,7 @@ __投資理財顧問__
 ## 目標:
 創造一個專屬於金融領域的聊天機器人
 ## Approch:
-### 1.Intoduce OpenAI API:
-(0) Deep learning, Transformer架構:參考台大李宏毅教授的深度學習課程(https://hackmd.io/@abliu/BkXmzDBmr)。
-   
+### 1.Intoduce OpenAI API:   
 (1) GPT-3.5-turbo-instruct：
 
    當用戶輸入一個問題或指令後，模型通過理解該文本中的關鍵信息，然後在它的知識範圍內生成一個連貫且相關的回應。是一個利用深度學習中
@@ -53,6 +51,7 @@ res = client.embeddings.create(
       input=text                         # 輸入欲轉換文字
   )
 ```
+補充：Deep learning的Transformer架構，可參考台大李宏毅教授的深度學習課程(https://hackmd.io/@abliu/BkXmzDBmr)。
 ### 2.架構：
 Step1: request柴鼠兄弟YouTube撥放清單網址
 Step2: 將撥放清單中所有影片的音訊以及標題透過whisper-1轉換為文字並儲存下來
