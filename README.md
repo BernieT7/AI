@@ -11,7 +11,7 @@ __投資理財顧問__
    當用戶輸入一個問題或指令後，模型通過理解該文本中的關鍵信息，然後在它的知識範圍內生成一個連貫且相關的回應。是一個利用深度學習中
    藉由Transformer的架構訓練出來的模型，也就是會根據上下文來決定每個單詞的重要性，從而更好地捕捉上下文關係。
 
-   展示使用方式：
+展示使用方式：
 ```python
 res = client.completions.create(              # AI會依據我的訊息給我回應
     model="gpt-3.5-turbo-instruct",
@@ -32,7 +32,7 @@ res = client.completions.create(              # AI會依據我的訊息給我回
 
    主要用於將音訊檔案中的語音轉換為文字。這項功能廣泛應用於語音轉錄、自動字幕生成等場景。一樣是由Transformer的架構訓練出來的模型。
 
-      展示使用方式：
+展示使用方式：
 ```python
 audio_file = open("音檔檔名", "rb")               # 開啟並讀取語音檔案
 res = client.audio.transcriptions.create(               # 做語音辨識並且轉換成文字，輸出輸入的語言相同
@@ -46,7 +46,7 @@ res = client.audio.transcriptions.create(               # 做語音辨識並且�
 
    將文字數據轉換為數值向量，這些向量可以用於多種自然語言處理任務。一樣是由Transformer的架構訓練出來的模型。
 
-   展示使用方式：
+展示使用方式：
 ```python
 res = client.embeddings.create(
       model="text-embedding-ada-002",
