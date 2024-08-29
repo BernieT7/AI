@@ -239,6 +239,9 @@ demo = gr.Interface(
 
 demo.launch(debug=True)
 ```
-
+## Pros & Cons
+優點：
+   1. 使用OpenAI API建構聊天機器人，可以省略
+   2.
 ## 使用資料：
 YouTuber夯鼠兄弟的YouTube撥放清單影片
